@@ -1,0 +1,5 @@
+{"title": "O que é MongoDB?", "body": "MongoDB é um banco de dados NoSQL orientado a documentos. É amplamente usado para armazenar dados em formato JSON.", "metadata": {"categoria": "Banco de Dados", "nivel": "Iniciante"}}
+{"title": "Como iniciar com Spring Boot?", "body": "Spring Boot é um framework para criar aplicações Java com configuração mínima. Ele permite criar serviços REST de forma rápida.", "metadata": {"categoria": "Java", "nivel": "Iniciante"}}
+{"title": "O que é RAG?", "body": "RAG significa Retrieval Augmented Generation, uma técnica que combina recuperação de documentos e modelos generativos.", "metadata": {"categoria": "IA", "nivel": "Intermediário"}}
+{"title": "Como conectar ao MongoDB?", "body": "Para conectar ao MongoDB, use a URI de conexão fornecida pelo serviço e configure seu driver corretamente.", "metadata": {"categoria": "Banco de Dados", "nivel": "Iniciante"}}
+{"title": "Vantagens do Spring Boot", "body": "O Spring Boot facilita a criação de aplicações Java, reduz a configuração manual e permite integração rápida com bancos de dados.", "metadata": {"categoria": "Java", "nivel": "Intermediário"}}
