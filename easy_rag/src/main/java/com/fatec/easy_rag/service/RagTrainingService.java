@@ -58,7 +58,7 @@ public class RagTrainingService {
             logger.info(">>>>>> RagTrainingService - inicia a preparação da base de conhecimento.");
             logger.info(">>>>>> RagTrainingService - Verifica a existencia do path de documentos => " + documentsPath.toString());
 
-            // 1. Gera um arquivo de exemplo se o path nao existir (mantido da sua lógica)
+            // 1. Gera um arquivo de exemplo se o path nao existir 
             if (!Files.exists(documentsPath)) {
                 Files.createDirectories(documentsPath);
                 logger.info(">>>>>> RagTrainingService - Cria o diretorio e um exemplo de documentos: " + documentsPath);
@@ -69,7 +69,7 @@ public class RagTrainingService {
 
             // 2. Carregar os documentos do sistema de arquivos
             // Usamos TextDocumentParser para garantir que o conteúdo seja tratado como texto.
-            logger.info(">>>>>> RagTrainingService - Carrega todos os arquivos neste path.");
+            logger.info(">>>>>> RagTrainingService - Carrega todos os arquivos armazenados neste path.");
             List<Document> loadedDocuments = FileSystemDocumentLoader.loadDocuments(documentsPath, new TextDocumentParser());
 
             if (loadedDocuments.isEmpty()) {

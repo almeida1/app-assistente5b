@@ -60,7 +60,7 @@ public class RagController {
 
 	@GetMapping("/treinamento")
 	public String treinamento() {
-		Path documentsPath = Paths.get("e:/documents");
+		Path documentsPath = Paths.get("C:/edson/2025 graduacao 2s/documents");
 		return trainingService.trainModel(documentsPath);
 
 	}
