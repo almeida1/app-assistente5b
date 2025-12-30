@@ -4,6 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+/**
+ * Tem como objetivo isolar o controller da tencologia de IA (Service Layer
+ * Patter)
+ * Facilita a modificação para adicao de logs específicos de negócio, salvar o
+ * histórico
+ * da conversa no banco SQL ou tratar exceções específicas da IA antes de
+ * devolver para o Controller
+ * Nesta versao é apenas um "pass-through".
+ */
 @Service
 public class RagQueryService {
 
@@ -14,12 +23,6 @@ public class RagQueryService {
         this.assistant = assistant;
     }
 
-    /**
-     * Consulta o modelo RAG com uma pergunta do usuário e retorna uma resposta.
-     *
-     * @param userQuery A pergunta do usuário.
-     * @return A resposta gerada pelo LLM com base nas informações recuperadas.
-     */
     /**
      * Consulta o modelo RAG com uma pergunta do usuário e retorna uma resposta.
      *

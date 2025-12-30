@@ -19,6 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Toda a configuração do LangChain4j é feita em um unico lugar. Facilita a
+ * modificação
+ * para outros modelos de IA.
+ */
 @Configuration
 public class LangChainConfig {
 

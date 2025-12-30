@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.easy_rag.service.ChatRequest;
 import com.fatec.easy_rag.service.RagQueryService;
-import com.fatec.easy_rag.service.RagTrainingService;
+import com.fatec.easy_rag.service.DocumentIngestor;
 
 @RestController
 @RequestMapping("/api")
 public class AssistantController {
 
-	private final RagTrainingService trainingService;
+	private final DocumentIngestor trainingService;
 	private final RagQueryService queryService;
 	private static final Logger logger = LogManager.getLogger(AssistantController.class);
 
-	public AssistantController(RagTrainingService trainingService, RagQueryService queryService) {
+	public AssistantController(DocumentIngestor trainingService, RagQueryService queryService) {
 		this.trainingService = trainingService;
 		this.queryService = queryService;
 	}

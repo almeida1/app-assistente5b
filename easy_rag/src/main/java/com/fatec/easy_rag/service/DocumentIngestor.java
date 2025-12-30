@@ -10,8 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service; // Mantido para consistência, embora não seja um @Service direto aqui
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.List;
@@ -19,18 +17,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Serviço responsável pelo treinamento do modelo RAG,
- * incluindo carregamento de documentos, extração de metadados,
+ * Serviço responsável pela carga dos documentos do modelo RAG,
+ * incluindo carregamento, extração de metadados,
  * criação de embeddings e ingestão no EmbeddingStore.
  */
 @Service
-public class RagTrainingService {
+public class DocumentIngestor {
 
-    private static final Logger logger = LogManager.getLogger(RagTrainingService.class);
+    private static final Logger logger = LogManager.getLogger(DocumentIngestor.class);
 
     private final EmbeddingStoreIngestor embeddingStoreIngestor;
 
-    public RagTrainingService(EmbeddingStoreIngestor embeddingStoreIngestor) {
+    public DocumentIngestor(EmbeddingStoreIngestor embeddingStoreIngestor) {
         this.embeddingStoreIngestor = embeddingStoreIngestor;
     }
 
@@ -46,9 +44,8 @@ public class RagTrainingService {
         try {
             logger.info(">>>>>> RagTrainingService - inicia a preparação da base de conhecimento.");
 
-            // 2. Carregar os documentos do sistema de arquivos
-            // Usamos TextDocumentParser para garantir que o conteúdo seja tratado como
-            // texto.
+            // 1. Carregar os documentos do sistema de arquivos
+            // Usa TextDocumentParser para garantir que o conteúdo seja tratado como texto.
             logger.info(">>>>>> RagTrainingService - Carrega todos os arquivos armazenados neste path.");
             List<Document> loadedDocuments = FileSystemDocumentLoader.loadDocuments(documentsPath,
                     new TextDocumentParser());
@@ -59,7 +56,7 @@ public class RagTrainingService {
 
             logger.info(">>>>>> RagTrainingService documentos carregados: " + loadedDocuments.size());
 
-            // 3. Processar cada documento para extrair metadados e criar um novo Document
+            // 2. Processar cada documento para extrair metadados e criar um novo Document
             logger.info(">>>>>> RagTrainingService - Armazena documentos com metadados.");
             List<Document> processedDocuments = loadedDocuments.stream()
                     .map(this::processDocumentWithMetadata)
@@ -71,7 +68,7 @@ public class RagTrainingService {
                 logger.debug("  Metadados: {}", doc.metadata());
             }
 
-            // 4. Ingestão dos documentos usando EmbeddingStoreIngestor
+            // 3. Ingestão dos documentos usando EmbeddingStoreIngestor
             // O Ingestor cuida de dividir (split), gerar embeddings e salvar no store.
             logger.info(">>>>>> RagTrainingService - Iniciando ingestão no EmbeddingStore.");
 
@@ -94,7 +91,11 @@ public class RagTrainingService {
 
     /**
      * Processa um documento existente para adicionar metadados personalizados.
-     *
+     * Objetivo - enriquecer o documento original com informacoes adicionais
+     * (metadados)
+     * antes de ser processado transformado em vetores (pelo
+     * EmbeddingStoreIngestor).
+     * 
      * @param originalDocument O documento original carregado.
      * @return Um novo Document com os metadados adicionados.
      */
@@ -108,8 +109,14 @@ public class RagTrainingService {
     }
 
     /**
-     * Extrai metadados de uma string de texto.
-     * Esta é a função fornecida pelo usuário, adaptada para o exemplo.
+     * Definição e extração dos metadados de uma string de texto.
+     * Esta é a função fornecida pelo usuário, adaptada para o exemplo. Para este
+     * exemplo foi assumido que
+     * todos os documentos são do mesmo tipo e do mesmo ano. Em un cenario real
+     * provavelmente os documentos
+     * teriam metadados diferentes, ou seria utilizada uma IA para auxiliar para
+     * classificar o testo e gerar
+     * estes metadados
      *
      * @param texto O texto do qual extrair os metadados.
      * @return Um mapa de strings contendo os metadados extraídos.
