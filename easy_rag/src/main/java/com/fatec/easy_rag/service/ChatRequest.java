@@ -1,15 +1,16 @@
 package com.fatec.easy_rag.service;
 
-public class PerguntaRequisicao {
-	private String pergunta;
+public class ChatRequest {
+    private String pergunta;
 
     // Construtor padrão (no-arg constructor) é **obrigatório** para que o Jackson
     // possa desserializar o JSON para um objeto Java.
-    public PerguntaRequisicao() {
+    public ChatRequest() {
     }
 
-    // Construtor com argumentos (opcional, mas útil para criar instâncias programaticamente).
-    public PerguntaRequisicao(String question) {
+    // Construtor com argumentos (opcional, mas útil para criar instâncias
+    // programaticamente).
+    public ChatRequest(String question) {
         this.pergunta = question;
     }
 
@@ -20,17 +21,18 @@ public class PerguntaRequisicao {
     }
 
     // Setter para a propriedade 'question'.
-    // O Jackson usa este setter para definir o valor da propriedade 'question' no objeto Java
+    // O Jackson usa este setter para definir o valor da propriedade 'question' no
+    // objeto Java
     // a partir do JSON recebido.
     public void setQuestion(String question) {
         this.pergunta = question;
     }
 
-    // Opcional: Sobrescrever toString() para facilitar a depuração.
+    // Sobrescrever toString() para facilitar a depuração.
     @Override
     public String toString() {
         return "QuestionRequest{" +
-               "pergunta ='" + pergunta + '\'' +
-               '}';
+                "pergunta ='" + pergunta + '\'' +
+                '}';
     }
 }
