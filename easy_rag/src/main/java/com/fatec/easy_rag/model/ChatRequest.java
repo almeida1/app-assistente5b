@@ -1,4 +1,4 @@
-package com.fatec.easy_rag.service;
+package com.fatec.easy_rag.model;
 
 public class ChatRequest {
     private String pergunta;

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.easy_rag.service.ChatRequest;
 import com.fatec.easy_rag.service.RagQueryService;
+import com.fatec.easy_rag.model.ChatRequest;
 import com.fatec.easy_rag.service.DocumentIngestor;
 
 @RestController
