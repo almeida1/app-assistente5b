@@ -4,10 +4,6 @@ import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.TextDocumentParser; // Adicionado para parsing explícito
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor; // Adicionado para ingestão simplificada
 
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +13,7 @@ import org.springframework.stereotype.Service; // Mantido para consistência, em
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,19 +28,10 @@ public class RagTrainingService {
 
     private static final Logger logger = LogManager.getLogger(RagTrainingService.class);
 
-    private final EmbeddingModel embeddingModel;
-    private final EmbeddingStore<TextSegment> embeddingStore;
+    private final EmbeddingStoreIngestor embeddingStoreIngestor;
 
-    /**
-     * Construtor do RagTrainingService.
-     * 
-     * @param embeddingModel O modelo de embedding a ser usado para criar
-     *                       embeddings.
-     * @param embeddingStore O store onde os embeddings serão persistidos.
-     */
-    public RagTrainingService(EmbeddingModel embeddingModel, EmbeddingStore<TextSegment> embeddingStore) {
-        this.embeddingModel = embeddingModel;
-        this.embeddingStore = embeddingStore;
+    public RagTrainingService(EmbeddingStoreIngestor embeddingStoreIngestor) {
+        this.embeddingStoreIngestor = embeddingStoreIngestor;
     }
 
     /**
@@ -58,18 +45,6 @@ public class RagTrainingService {
     public String trainModel(Path documentsPath) {
         try {
             logger.info(">>>>>> RagTrainingService - inicia a preparação da base de conhecimento.");
-            logger.info(">>>>>> RagTrainingService - Verifica a existencia do path de documentos => "
-                    + documentsPath.toString());
-
-            // 1. Gera um arquivo de exemplo se o path nao existir
-            if (!Files.exists(documentsPath)) {
-                Files.createDirectories(documentsPath);
-                logger.info(
-                        ">>>>>> RagTrainingService - Cria o diretorio e um exemplo de documentos: " + documentsPath);
-                Files.writeString(documentsPath.resolve("exemplo.txt"),
-                        "O céu é azul e o mar é profundo. O sol brilha forte. A Terra é um planeta maravilhoso. A capital do Brasil é Brasília.");
-                logger.info(">>>>>> Arquivo de exemplo 'exemplo.txt' criado.");
-            }
 
             // 2. Carregar os documentos do sistema de arquivos
             // Usamos TextDocumentParser para garantir que o conteúdo seja tratado como
@@ -100,22 +75,17 @@ public class RagTrainingService {
             // O Ingestor cuida de dividir (split), gerar embeddings e salvar no store.
             logger.info(">>>>>> RagTrainingService - Iniciando ingestão no EmbeddingStore.");
 
-            EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-                    .documentSplitter(DocumentSplitters.recursive(500, 50))
-                    .embeddingModel(embeddingModel)
-                    .embeddingStore(embeddingStore)
-                    .build();
+            // 4. Ingestão dos documentos usando EmbeddingStoreIngestor
+            // O Ingestor já foi configurado no LangChainConfig e injetado aqui.
+            logger.info(">>>>>> RagTrainingService - Iniciando ingestão no EmbeddingStore.");
 
-            ingestor.ingest(processedDocuments);
+            embeddingStoreIngestor.ingest(processedDocuments);
 
             logger.info(">>>>>> RagTrainingService - Treinamento concluído. Documentos ingeridos: "
                     + processedDocuments.size());
             return "Treinamento do modelo RAG concluído com sucesso. Documentos processados: "
                     + processedDocuments.size();
 
-        } catch (IOException e) {
-            logger.error(">>>>>> RagTrainingService - Erro de E/S durante o treinamento: " + e.getMessage());
-            return "Falha no treinamento: " + e.getMessage();
         } catch (Exception e) {
             logger.error(">>>>>> RagTrainingService - Erro inesperado: " + e.getMessage(), e);
             return "Falha no treinamento: " + e.getMessage();
