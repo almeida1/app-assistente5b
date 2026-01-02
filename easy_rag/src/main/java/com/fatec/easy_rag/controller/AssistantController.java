@@ -30,26 +30,26 @@ public class AssistantController {
 
 	@PostMapping("/consultar")
 	public String ask(@RequestBody ChatRequest request) {
-		// --- Adicione este log para depuração ---
-		logger.info(">>>>>> Controller - Requisição recebida: " + request);
 		if (request != null) {
-			logger.info(">>>>>> Controller - Pergunta extraída: " + request.getQuestion());
+			logger.info(">>>>>> Controller - Pergunta recebida: " + request.getQuestion());
 		} else {
 			logger.info(">>>>>> Controller - Objeto QuestionRequest é nulo!");
 		}
-		// --- Fim do log de depuração ---
-
 		if (request == null || request.getQuestion() == null) {
-			// Lidar com o caso de requisição ou pergunta nula
 			return "Erro: A pergunta não foi fornecida corretamente no corpo da requisição JSON.";
 		}
 
 		return queryService.queryModel(request.getQuestion());
 	}
 
+	/**
+	 * Obtem o arquivo documento dos dados a serem treinados
+	 * 
+	 * @return
+	 */
 	@PostMapping("/upload")
 	public ResponseEntity<String> treinamento() {
-		Path documentsPath = Paths.get("C:/edson/2025 graduacao 2s/documents");
+		Path documentsPath = Paths.get("E:/2025 graduacao 2s/rag documents");
 		String mensagem = trainingService.trainModel(documentsPath);
 		return ResponseEntity.ok(mensagem);
 

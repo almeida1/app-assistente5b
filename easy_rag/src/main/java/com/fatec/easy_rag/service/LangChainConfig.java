@@ -84,7 +84,7 @@ public class LangChainConfig {
     // 5. Retriever (Busca os documentos relevantes) - recuperação semantica
     // converte a pergunta do usuario
     // e os documentos em vetores e busca os documentos mais similares baseando-se
-    // no significado (semantica)
+    // no significado (semantica) com filtragem por metadados
     @Bean
     public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> embeddingStore,
             EmbeddingModel embeddingModel) {
@@ -94,18 +94,17 @@ public class LangChainConfig {
         // Filtra dinamicamente os documentos baseando-se em palavras-chave na pergunta
         return query -> {
             dev.langchain4j.store.embedding.filter.Filter filter = null;
-
             String userQuery = query.text().toLowerCase();
 
-            // Exemplo de regra de negócio para filtro de metadados
-            if (userQuery.contains("risco")) {
-                logger.info(">>>>>> Aplicando filtro: topico = Risk-Based Testing");
+            // Exemplo de regra de negócio para filtro de metadados atualizado
+            if (userQuery.contains("sequencial")) {
+                logger.info(">>>>>> Aplicando filtro: sdlc_type = sequencial");
                 filter = dev.langchain4j.store.embedding.filter.MetadataFilterBuilder
-                        .metadataKey("topico").isEqualTo("Risk-Based Testing");
+                        .metadataKey("sdlc_type").isEqualTo("sequencial");
             } else if (userQuery.contains("analista")) {
-                logger.info(">>>>>> Aplicando filtro: papel = Test Analyst");
+                logger.info(">>>>>> Aplicando filtro: role = Analista de Teste");
                 filter = dev.langchain4j.store.embedding.filter.MetadataFilterBuilder
-                        .metadataKey("papel").isEqualTo("Test Analyst");
+                        .metadataKey("role").isEqualTo("Analista de Teste");
             }
 
             // Constrói o retriever sob demanda com o filtro apropriado

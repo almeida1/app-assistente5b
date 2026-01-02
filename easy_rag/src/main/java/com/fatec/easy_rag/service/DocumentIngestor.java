@@ -115,19 +115,32 @@ public class DocumentIngestor {
      * todos os documentos são do mesmo tipo e do mesmo ano. Em un cenario real
      * provavelmente os documentos
      * teriam metadados diferentes, ou seria utilizada uma IA para auxiliar para
-     * classificar o testo e gerar
-     * estes metadados
+     * classificar o texto e gerar estes metadados
      *
      * @param texto O texto do qual extrair os metadados.
      * @return Um mapa de strings contendo os metadados extraídos.
      */
     private Map<String, String> extrairMetadados(String texto) {
+        // Simulação de extração de metadados baseada no conteúdo
+        // Em um cenário real, isso poderia usar Regex avançado ou outro LLM
+
         return Map.of(
-                "fonte", "ISTQB CTAL-TA Syllabus v4.0",
-                "ano", "2025",
-                "tipo", "Referência Técnica",
-                "nivel", "Avançado",
-                "papel", texto.contains("Test Analyst") ? "Test Analyst" : "Outro",
-                "topico", texto.contains("Risk-Based Testing") ? "Risk-Based Testing" : "Processo de Teste");
+                "source", "ISTQB-CTFL-v4.0.1",
+                "section", detectarSecao(texto), // Exemplo de função auxiliar implementada abaixo
+                "role", "Analista de Teste",
+                "sdlc_type", texto.toLowerCase().contains("sequencial") ? "sequencial" : "iterativo",
+                "activities", "planejamento, análise, execução",
+                "competencies", "funcional, não-funcional",
+                "is_glossary", String.valueOf(texto.toLowerCase().contains("glossário")));
+    }
+
+    // fragmento de codigo para auxiliar na extração de seção (opcional, pode ser
+    // removido e programado hardcoded)
+    private String detectarSecao(String texto) {
+        if (texto.contains("1.1"))
+            return "1.1";
+        if (texto.contains("1.2"))
+            return "1.2";
+        return "Geral";
     }
 }
