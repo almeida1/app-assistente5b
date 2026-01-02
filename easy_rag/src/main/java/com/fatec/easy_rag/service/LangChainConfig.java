@@ -81,17 +81,43 @@ public class LangChainConfig {
                 .build();
     }
 
-    // 5. Retriever (Busca os documentos relevantes)
+    // 5. Retriever (Busca os documentos relevantes) - recuperação semantica
+    // converte a pergunta do usuario
+    // e os documentos em vetores e busca os documentos mais similares baseando-se
+    // no significado (semantica)
     @Bean
     public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> embeddingStore,
             EmbeddingModel embeddingModel) {
-        logger.info(">>>>> Configurando o retriever de conteúdo...");
-        return EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(embeddingStore)
-                .embeddingModel(embeddingModel)
-                .maxResults(3)
-                .minScore(0.5)
-                .build();
+        logger.info(">>>>> Configurando o retriever de conteúdo com filtragem de metadados...");
+
+        // Implementação da Estratégia 2: Recuperação por Metadados
+        // Filtra dinamicamente os documentos baseando-se em palavras-chave na pergunta
+        return query -> {
+            dev.langchain4j.store.embedding.filter.Filter filter = null;
+
+            String userQuery = query.text().toLowerCase();
+
+            // Exemplo de regra de negócio para filtro de metadados
+            if (userQuery.contains("risco")) {
+                logger.info(">>>>>> Aplicando filtro: topico = Risk-Based Testing");
+                filter = dev.langchain4j.store.embedding.filter.MetadataFilterBuilder
+                        .metadataKey("topico").isEqualTo("Risk-Based Testing");
+            } else if (userQuery.contains("analista")) {
+                logger.info(">>>>>> Aplicando filtro: papel = Test Analyst");
+                filter = dev.langchain4j.store.embedding.filter.MetadataFilterBuilder
+                        .metadataKey("papel").isEqualTo("Test Analyst");
+            }
+
+            // Constrói o retriever sob demanda com o filtro apropriado
+            return EmbeddingStoreContentRetriever.builder()
+                    .embeddingStore(embeddingStore)
+                    .embeddingModel(embeddingModel)
+                    .filter(filter) // Aplica o filtro (pode ser null)
+                    .maxResults(3)
+                    .minScore(0.5)
+                    .build()
+                    .retrieve(query);
+        };
     }
 
     // 6. O Assistente configurado (Conecta Chat + RAG + Memória)

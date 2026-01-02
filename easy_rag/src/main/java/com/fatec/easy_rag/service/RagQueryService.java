@@ -33,7 +33,7 @@ public class RagQueryService {
         try {
             logger.info(">>>>>> RagQueryService - Recebida consulta do usuário: " + userQuery);
 
-            // O contentRetriever foi configurado no AiServices (no construtor),
+            // O contentRetriever foi configurado no LangChainConfig (no construtor),
             // então o LangChain4j busca automaticamente o contexto relevante
             // e o injeta no prompt antes de chamar o LLM.
             return assistant.chat(userQuery);
