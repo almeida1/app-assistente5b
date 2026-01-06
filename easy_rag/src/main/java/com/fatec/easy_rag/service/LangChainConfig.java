@@ -1,6 +1,7 @@
 package com.fatec.easy_rag.service;
 
 import dev.langchain4j.data.segment.TextSegment;
+import java.util.List;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -75,7 +76,7 @@ public class LangChainConfig {
             EmbeddingStore<TextSegment> embeddingStore) {
         logger.info(">>>>>> Configurando o ingestor de embeddings...");
         return EmbeddingStoreIngestor.builder()
-                .documentSplitter(dev.langchain4j.data.document.splitter.DocumentSplitters.recursive(500, 50))
+                .documentSplitter(dev.langchain4j.data.document.splitter.DocumentSplitters.recursive(1000, 150))
                 .embeddingModel(embeddingModel)
                 .embeddingStore(embeddingStore)
                 .build();
@@ -108,7 +109,7 @@ public class LangChainConfig {
             }
 
             // Constrói o retriever sob demanda com o filtro apropriado
-            return EmbeddingStoreContentRetriever.builder()
+            List<dev.langchain4j.rag.content.Content> results = EmbeddingStoreContentRetriever.builder()
                     .embeddingStore(embeddingStore)
                     .embeddingModel(embeddingModel)
                     .filter(filter) // Aplica o filtro (pode ser null)
@@ -116,6 +117,11 @@ public class LangChainConfig {
                     .minScore(0.5)
                     .build()
                     .retrieve(query);
+
+            logger.info(">>>>>> Contexto recuperado ({} segmentos):", results.size());
+            results.forEach(content -> logger.info("   - {}", content.textSegment().text()));
+
+            return results;
         };
     }
 

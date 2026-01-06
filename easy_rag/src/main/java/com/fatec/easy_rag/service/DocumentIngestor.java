@@ -42,11 +42,11 @@ public class DocumentIngestor {
      */
     public String trainModel(Path documentsPath) {
         try {
-            logger.info(">>>>>> RagTrainingService - inicia a preparação da base de conhecimento.");
+            logger.info(">>>>>> DocumentIngestor - inicia a preparação da base de conhecimento.");
 
             // 1. Carregar os documentos do sistema de arquivos
             // Usa TextDocumentParser para garantir que o conteúdo seja tratado como texto.
-            logger.info(">>>>>> RagTrainingService - Carrega todos os arquivos armazenados neste path.");
+            logger.info(">>>>>> DocumentIngestor - Carrega todos os arquivos armazenados neste path.");
             List<Document> loadedDocuments = FileSystemDocumentLoader.loadDocuments(documentsPath,
                     new TextDocumentParser());
 
@@ -54,15 +54,15 @@ public class DocumentIngestor {
                 return "Nenhum documento encontrado no caminho: " + documentsPath;
             }
 
-            logger.info(">>>>>> RagTrainingService documentos carregados: " + loadedDocuments.size());
+            logger.info(">>>>>> DocumentIngestor - documentos carregados: " + loadedDocuments.size());
 
             // 2. Processar cada documento para extrair metadados e criar um novo Document
-            logger.info(">>>>>> RagTrainingService - Armazena documentos com metadados.");
+            logger.info(">>>>>> DocumentIngestor - Armazena documentos com metadados.");
             List<Document> processedDocuments = loadedDocuments.stream()
                     .map(this::processDocumentWithMetadata)
                     .collect(Collectors.toList());
 
-            logger.info("RagTrainingService documentos processados com metadados:");
+            logger.info(">>>>>> DocumentIngestor - documentos processados com metadados:");
             for (Document doc : processedDocuments) {
                 logger.debug("  Conteúdo: \"{}...\"", doc.text().substring(0, Math.min(doc.text().length(), 100)));
                 logger.debug("  Metadados: {}", doc.metadata());
@@ -70,21 +70,18 @@ public class DocumentIngestor {
 
             // 3. Ingestão dos documentos usando EmbeddingStoreIngestor
             // O Ingestor cuida de dividir (split), gerar embeddings e salvar no store.
-            logger.info(">>>>>> RagTrainingService - Iniciando ingestão no EmbeddingStore.");
-
-            // 4. Ingestão dos documentos usando EmbeddingStoreIngestor
             // O Ingestor já foi configurado no LangChainConfig e injetado aqui.
-            logger.info(">>>>>> RagTrainingService - Iniciando ingestão no EmbeddingStore.");
+            logger.info(">>>>>> DocumentIngestor - Iniciando ingestão no EmbeddingStore.");
 
             embeddingStoreIngestor.ingest(processedDocuments);
 
-            logger.info(">>>>>> RagTrainingService - Treinamento concluído. Documentos ingeridos: "
+            logger.info(">>>>>> DocumentIngestor - Treinamento concluído. Documentos processados: "
                     + processedDocuments.size());
-            return "Treinamento do modelo RAG concluído com sucesso. Documentos processados: "
+            return "DocumentIngestor - Treinamento concluído. Documentos processados: "
                     + processedDocuments.size();
 
         } catch (Exception e) {
-            logger.error(">>>>>> RagTrainingService - Erro inesperado: " + e.getMessage(), e);
+            logger.error(">>>>>> DocumentIngestor - Erro inesperado: " + e.getMessage(), e);
             return "Falha no treinamento: " + e.getMessage();
         }
     }
