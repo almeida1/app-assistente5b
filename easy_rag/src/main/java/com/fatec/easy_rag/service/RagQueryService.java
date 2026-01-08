@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Tem como objetivo isolar o controller da tencologia de IA (Service Layer
- * Patter)
+ * Pattern)
  * Facilita a modificação para adicao de logs específicos de negócio, salvar o
  * histórico
  * da conversa no banco SQL ou tratar exceções específicas da IA antes de

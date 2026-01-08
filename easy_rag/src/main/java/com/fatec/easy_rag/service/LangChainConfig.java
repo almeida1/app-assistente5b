@@ -120,7 +120,7 @@ public class LangChainConfig {
 
             logger.info(">>>>>> Contexto recuperado ({} segmentos):", results.size());
             results.forEach(content -> logger.info("   - {}", content.textSegment().text()));
-
+            logger.info(">>>>>> LangChainConfig Filtro => " + filter);
             return results;
         };
     }

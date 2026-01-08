@@ -111,14 +111,15 @@ public class DocumentIngestor {
      * exemplo foi assumido que
      * todos os documentos são do mesmo tipo e do mesmo ano. Em un cenario real
      * provavelmente os documentos
-     * teriam metadados diferentes, ou seria utilizada uma IA para auxiliar para
-     * classificar o texto e gerar estes metadados
-     *
+     * teriam metadados diferentes, pode ser utilizada uma IA para classificar o
+     * texto e gerar estes metadados
+     * poderia usar Regex avançado ou outro LLM
+     * 
      * @param texto O texto do qual extrair os metadados.
      * @return Um mapa de strings contendo os metadados extraídos.
      */
     private Map<String, String> extrairMetadados(String texto) {
-        // Simulação de extração de metadados baseada no conteúdo
+
         // Em um cenário real, isso poderia usar Regex avançado ou outro LLM
 
         return Map.of(

@@ -49,7 +49,7 @@ public class AssistantController {
 	 */
 	@PostMapping("/upload")
 	public ResponseEntity<String> treinamento() {
-		Path documentsPath = Paths.get("E:/2025 graduacao 2s/rag documents");
+		Path documentsPath = Paths.get("E:/2026 graduacao 1s/rag documents");
 		String mensagem = trainingService.trainModel(documentsPath);
 		return ResponseEntity.ok(mensagem);
 
